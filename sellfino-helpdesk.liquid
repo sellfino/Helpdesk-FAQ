@@ -1,0 +1,464 @@
+{% if section.settings.active %}
+
+  {% capture 'style__sllf-helpdesk__container' %}
+    max-width: {{ section.settings.width }}px;
+  {% endcapture %}
+
+  {% capture 'style__sllf-helpdesk__top' %}
+    background: {{ section.settings.color_top_background }};
+    color: {{ section.settings.color_top }};
+  {% endcapture %}
+
+  {% capture 'style__sllf-helpdesk__headline' %}
+    color: {{ section.settings.color_top }};
+  {% endcapture %}
+
+  {% capture 'style__sllf-helpdesk__body' %}
+    background: {{ section.settings.body_background }}
+  {% endcapture %}
+
+  {% capture 'style__sllf-helpdesk__qa' %}
+    background: {{ section.settings.question_background }};
+  box-shadow: 1px 1px 3px -1px rgba({{ section.settings.color_question.red }}, {{ section.settings.color_question.green }}, {{ section.settings.color_question.blue }}, 0.5);
+  {% endcapture %}
+
+  {% capture 'style__sllf-helpdesk__qa-hover' %}
+  border-color: {{ section.settings.color_question }};
+  {% endcapture %}
+
+  {% capture 'style__sllf-helpdesk__question' %}
+  color: {{ section.settings.color_question }};
+  {% endcapture %}
+
+  {% capture 'style__sllf-helpdesk__answer' %}
+  color: {{ section.settings.color_answer }};
+  {% endcapture %}
+
+  {% capture 'style__sllf-helpdesk__indicator' %}
+  background: {{ section.settings.color_question }};
+  {% endcapture %}
+
+  <style>
+    .sllf-helpdesk__container { {{ style__sllf-helpdesk__container | strip_newlines | strip | remove: '  ' }} }
+    .sllf-helpdesk__top { {{ style__sllf-helpdesk__top | strip_newlines | strip | remove: '  ' }} }
+    .sllf-helpdesk__headline,
+    .sllf-helpdesk__subheadline { {{ style__sllf-helpdesk__headline | strip_newlines | strip | remove: '  ' }} }
+    .sllf-helpdesk__body { {{ style__sllf-helpdesk__body | strip_newlines | strip | remove: '  ' }} }
+    .sllf-helpdesk__qa { {{ style__sllf-helpdesk__qa | strip_newlines | strip | remove: '  ' }} }
+    .sllf-helpdesk__qa:hover { {{ style__sllf-helpdesk__qa-hover | strip_newlines | strip | remove: '  ' }} }
+    .sllf-helpdesk__question { {{ style__sllf-helpdesk__question | strip_newlines | strip | remove: '  ' }} }
+    .sllf-helpdesk__answer { {{ style__sllf-helpdesk__answer | strip_newlines | strip | remove: '  ' }} }
+    .sllf-helpdesk__indicator::before,
+    .sllf-helpdesk__indicator::after { {{ style__sllf-helpdesk__indicator | strip_newlines | strip | remove: '  ' }} }
+  </style>
+
+  <div class="sllf-helpdesk">
+    <div class="sllf-helpdesk__top">
+      <div class="sllf-helpdesk__container">
+        <h2 class="sllf-helpdesk__headline">{{ section.settings.headline }}</h2>
+        {% if section.settings.subheadline != '' %}
+          <h3 class="sllf-helpdesk__subheadline">{{ section.settings.subheadline }}</h3>
+        {% endif %}
+        <form class="sllf-helpdesk__form">
+          <input type="text" placeholder="{{ section.settings.placeholder }}" class="sllf-helpdesk__search">
+          <button type="submit" class="sllf-helpdesk__submit">
+            <svg fill="{{ section.settings.color_top_background }}" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 512 512" xml:space="preserve"><g><g><path d="M225.474,0C101.151,0,0,101.151,0,225.474c0,124.33,101.151,225.474,225.474,225.474c124.33,0,225.474-101.144,225.474-225.474C450.948,101.151,349.804,0,225.474,0z M225.474,409.323c-101.373,0-183.848-82.475-183.848-183.848S124.101,41.626,225.474,41.626s183.848,82.475,183.848,183.848S326.847,409.323,225.474,409.323z"/></g></g><g><g><path d="M505.902,476.472L386.574,357.144c-8.131-8.131-21.299-8.131-29.43,0c-8.131,8.124-8.131,21.306,0,29.43l119.328,119.328c4.065,4.065,9.387,6.098,14.715,6.098c5.321,0,10.649-2.033,14.715-6.098C514.033,497.778,514.033,484.596,505.902,476.472z"/></g></g></svg>
+          </button>
+        </form>
+      </div>
+    </div>
+    <div class="sllf-helpdesk__body">
+      <div class="sllf-helpdesk__container">
+        {% for block in section.blocks %}
+          {% case block.type %}
+            {% when 'title' %}
+              <h4 class="sllf-helpdesk__title">
+                {{ block.settings.title }}
+              </h4>
+            {% when 'qa' %}
+              <div class="sllf-helpdesk__qa">
+                <h5 class="sllf-helpdesk__question">
+                  {{ block.settings.title }}
+                  <div class="sllf-helpdesk__indicator"></div>
+                </h5>
+                <div class="sllf-helpdesk__answer">
+                  <div class="sllf-helpdesk__answer_inside">
+                    {{ block.settings.answer }}
+                  </div>
+                </div>
+              </div>
+          {% endcase %}
+        {% endfor %}
+        <h4 class="sllf-helpdesk__title sllf-helpdesk__notfound">{{ section.settings.notfound }}</h4>
+      </div>
+    </div>
+  </div>
+{% endif %}
+
+{% schema %}
+  {
+    "name": "Sellfino :: Helpdesk",
+    "class": "sllf-helpdesk-section",
+    "settings": [
+      {
+        "type": "header",
+        "content": "General"
+      },
+      {
+        "type": "number",
+        "id": "width",
+        "label": "Container Width (px)",
+        "default": 1000
+      },
+      {
+        "type": "checkbox",
+        "id": "active",
+        "label": "Active",
+        "default": true
+      },
+      {
+        "type": "text",
+        "id": "headline",
+        "label": "Headline",
+        "default": "Help Desk"
+      },
+      {
+        "type": "text",
+        "id": "subheadline",
+        "label": "Under Headline",
+        "default": "Find answers to your questions"
+      },
+      {
+        "type": "text",
+        "id": "placeholder",
+        "label": "Placeholder",
+        "default": "What would you like to know... ?"
+      },
+      {
+        "type": "text",
+        "id": "notfound",
+        "label": "Nothing Found",
+        "default": "Oops... Nothing found"
+      },
+      {
+        "type": "header",
+        "content": "Colors"
+      },
+      {
+        "type": "select",
+        "id": "style_top_background",
+        "label": "Top Background Style",
+        "default": "color",
+        "options": [
+          {
+            "value": "color",
+            "label": "Solid Color"
+          },
+          {
+            "value": "image",
+            "label": "Image"
+          }
+        ]
+      },
+      {
+        "type": "color",
+        "id": "color_top_background",
+        "label": "Top Background Color",
+        "default": "#143264"
+      },
+      {
+        "type": "image_picker",
+        "id": "image_top_background",
+        "label": "Top Background Image"
+      },
+      {
+        "type": "color",
+        "id": "color_top",
+        "label": "Top Color",
+        "default": "#fff"
+      },
+      {
+        "type": "color",
+        "id": "body_background",
+        "label": "Body Background",
+        "default": "#f2f8ff"
+      },
+      {
+        "type": "color",
+        "id": "color_section_title",
+        "label": "Section Title Color",
+        "default": "#1a1a1a"
+      },
+      {
+        "type": "color",
+        "id": "question_background",
+        "label": "Question Background",
+        "default": "#fff"
+      },
+      {
+        "type": "color",
+        "id": "color_question",
+        "label": "Question Color",
+        "default": "#163465"
+      },
+      {
+        "type": "color",
+        "id": "color_answer",
+        "label": "Answer Color",
+        "default": "#7d8ca5"
+      }
+    ],
+    "blocks": [
+      {
+        "type": "title",
+        "name": "Section Title",
+        "settings": [
+          {
+            "type": "text",
+            "id": "title",
+            "label": "Title"
+          }
+        ]
+      },
+      {
+        "type": "qa",
+        "name": "Question / Answer",
+        "settings": [
+          {
+            "type": "text",
+            "id": "title",
+            "label": "Question"
+          },
+          {
+            "type": "select",
+            "id": "type",
+            "label": "Answer Type",
+            "default": "text",
+            "options": [
+              {
+                "value": "text",
+                "label": "Text Field"
+              },
+              {
+                "value": "page",
+                "label": "Page Content"
+              }
+            ]
+          },
+          {
+            "type": "richtext",
+            "id": "answer",
+            "label": "Answer"
+          },
+          {
+            "type": "page",
+            "id": "page",
+            "label": "Page Content"
+          }
+        ]
+      }
+    ],
+    "presets": [
+      {
+        "name": "Sellfino :: Helpdesk",
+        "blocks": [
+          {
+            "type": "title",
+            "settings": {
+              "title": "Lorem Ipsum"
+            }
+          },
+          {
+            "type": "qa",
+            "settings": {
+              "title": "Lorem Ipsum?",
+              "type": "text",
+              "answer": "<p>Lorem Ipsum et dolores</p>"
+            }
+          },
+          {
+            "type": "qa",
+            "settings": {
+              "title": "Lorem Ipsum?",
+              "type": "text",
+              "answer": "<p>Lorem Ipsum et dolores</p>"
+            }
+          },
+          {
+            "type": "title",
+            "settings": {
+              "title": "Lorem Ipsum"
+            }
+          },
+          {
+            "type": "qa",
+            "settings": {
+              "title": "Lorem Ipsum?",
+              "type": "text",
+              "answer": "<p>Lorem Ipsum et dolores</p>"
+            }
+          },
+          {
+            "type": "qa",
+            "settings": {
+              "title": "Lorem Ipsum?",
+              "type": "text",
+              "answer": "<p>Lorem Ipsum et dolores</p>"
+            }
+          }
+        ]
+      }
+    ]
+  }
+{% endschema %}
+
+{% stylesheet %}
+  .sllf-helpdesk-section:last-of-type .sllf-helpdesk__body { padding-bottom: 50px; }
+  .sllf-helpdesk__container { max-width: 1100px; margin: 0 auto; padding: 0 50px; }
+  .sllf-helpdesk__top { padding: 50px 0; text-align: center; }
+  .sllf-helpdesk__headline { font-size: 40px; line-height: 1.5; margin: 0; }
+  .sllf-helpdesk__subheadline { font-size: 30px; line-height: 1.5; margin: 0; }
+  
+  .sllf-helpdesk__form { width: 100%; max-width: 600px; margin: 20px auto 0; position: relative; }
+  .sllf-helpdesk__search { background: #fff; font-size: 18px; line-height: 1.5; margin: 0; padding: 15px 90px; text-align: center; border: 0; border-radius: 100px; width: 100%; }
+  .sllf-helpdesk__submit { width: 80px; height: 100%; display: block; background: none; border: 0; position: absolute; top: 0; right: 0; cursor: pointer; }  
+  .sllf-helpdesk__submit svg { position: absolute; top: 50%; left: 50%; width: 20px; height: 20px; margin: -11px 0 0 -10px; }
+
+  .sllf-helpdesk__title { font-size: 25px; line-height: 1.5; margin: 0; padding: 35px 0 20px; }
+  .sllf-helpdesk__qa { background: #fff; border: 1px solid #fff; transition: border .2s ease; position: relative; }
+  .sllf-helpdesk__qa + .sllf-helpdesk__qa { margin-top: 15px; }
+  .sllf-helpdesk__question { font-size: 18px; line-height: 1.5; margin: 0; padding: 15px; cursor: pointer; position: relative; }
+  .sllf-helpdesk__answer { font-size: 14px; line-height: 1.5; margin: 0 15px; height: 0; transition: height .5s ease; overflow: hidden; }
+  .sllf-helpdesk__answer_inside { padding: 15px 0; border-top: 1px dashed #dce1e6; }
+  .sllf-helpdesk__answer p { margin: 0; padding: 0; }
+  .sllf-helpdesk__answer p + p { padding-top: 10px; }
+  .sllf-helpdesk__indicator { position: absolute; top: 20px; right: 15px; pointer-events: none; width: 15px; height: 15px; }
+  .sllf-helpdesk__indicator::before { content: ''; position: absolute; top: 6px; left: 0; width: 100%; height: 3px; border-radius: 10px; }
+  .sllf-helpdesk__indicator::after { content: ''; position: absolute; left: 6px; top: 0; height: 100%; width: 3px; border-radius: 10px; transition: opacity .1s ease; }
+  .sllf-helpdesk__qa-active .sllf-helpdesk__indicator::after { opacity: 0; }
+  
+  .sllf-helpdesk__notfound { text-align: center; display: none; }
+  
+  @media (max-width: 767px) {
+    .sllf-helpdesk-section:last-of-type .sllf-helpdesk__body { padding-bottom: 35px; }
+    .sllf-helpdesk__container { padding: 0 25px; }
+    .sllf-helpdesk__top { padding: 35px 0; }
+    .sllf-helpdesk__headline { font-size: 30px; }
+    .sllf-helpdesk__subheadline { font-size: 22px; }
+
+    .sllf-helpdesk__form { margin: 15px auto 0; }
+    .sllf-helpdesk__search { font-size: 16px; padding: 10px 60px; }
+    .sllf-helpdesk__submit { width: 50px; }  
+    .sllf-helpdesk__submit svg { width: 16px; height: 16px; margin: -8px 0 0 -7px; }
+
+    .sllf-helpdesk__title { font-size: 18px; padding: 25px 0 15px; }
+    .sllf-helpdesk__qa + .sllf-helpdesk__qa { margin-top: 10px; }
+    .sllf-helpdesk__question { font-size: 16px; padding: 10px; }
+    .sllf-helpdesk__indicator { top: 14px; }
+  }
+{% endstylesheet %}
+
+{% javascript %}
+  Sellfino_Helpdesk = function() {
+    this.input = this.q('.sllf-helpdesk__search'),
+    this.qas = this.q('.sllf-helpdesk__qa', true),
+	this.notFound = this.q('.sllf-helpdesk__notfound');
+    this.init();
+  }
+
+  Sellfino_Helpdesk.prototype = {
+    init: function () {
+      var _this = this,
+          form = this.q('.sllf-helpdesk__form'),
+          questions = this.q('.sllf-helpdesk__question', true);
+
+      questions.forEach(function(question) {
+        question.addEventListener('click', function(e) {
+          e.preventDefault();
+          _this.qas.forEach(function(qa) {
+            var answer = qa.querySelector('.sllf-helpdesk__answer');
+            if (qa == e.target.parentElement) {
+              qa.classList.contains('sllf-helpdesk__qa-active') ? _this.slideUp(answer) : _this.slideDown(answer);
+            } else {
+              _this.slideUp(answer);
+            }
+          });
+        });
+      });
+
+      form.addEventListener('submit', function(e) {
+        e.preventDefault();
+        _this.search();
+      });
+
+      ['input', 'blur', 'keydown'].forEach(function(e) {
+        _this.input.addEventListener(e, _this.search.bind(_this));
+      });
+
+    },
+    q: function(element, all = false) {
+      return all ? document.querySelectorAll(element) : document.querySelector(element);
+    },
+    slideDown: function(element) {
+      element.parentElement.classList.add('sllf-helpdesk__qa-active');
+      element.style.height = 'auto';
+      var height = element.clientHeight + 'px';
+      element.style.height = '0px';
+
+      setTimeout(function() {
+        element.style.height = height;
+      }, 0) 
+    },
+    slideUp: function(element) {
+      element.style.height = '0px';
+      element.addEventListener('transitionend', function() {
+        element.parentElement.classList.remove('sllf-helpdesk__qa-active')
+      }, {once: true});
+    },
+    search: function() {
+      var value = this.input.value, titlesArr = [], titlesArrIndex = -1, noResults = true;
+	  this.qas.forEach(function(qa) {
+        if (qa.innerText.toLowerCase().indexOf(value.toLowerCase()) > -1) {
+          qa.style.display = 'block';
+        } else {
+          qa.style.display = 'none';
+        }
+      });
+	  
+      this.q('.sllf-helpdesk__body .sllf-helpdesk__container', true).forEach(function(container) {
+		[].forEach.call(container.children, function(element) {
+          if (!element.classList.contains('sllf-helpdesk__notfound')) {
+            if (element.classList.contains('sllf-helpdesk__title')) {
+              titlesArrIndex++;
+              titlesArr[titlesArrIndex] = {
+                section: element,
+                elements: []
+              };
+            } else {
+              titlesArr[titlesArrIndex].elements.push(element);
+            }
+          }
+        });
+      });
+	  
+	  titlesArr.forEach(function(title) {
+		var hide = true;
+ 	    title.elements.forEach(function(element) {
+		  if (element.style.display != 'none') {
+		    hide = noResults = false;
+          }
+        });
+
+		hide ? title.section.style.display = 'none' : title.section.style.display = 'block';
+      });
+
+	  if (noResults) {
+	  	this.notFound.style.display = 'block';
+      } else {
+	  	this.notFound.style.display = 'none';
+      }
+    }
+  }
+
+  new Sellfino_Helpdesk();
+{% endjavascript %}
