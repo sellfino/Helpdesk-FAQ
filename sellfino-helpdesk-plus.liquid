@@ -1,0 +1,99 @@
+{% if section.settings.active %}
+
+  <div class="sllf-helpdesk">
+    <div class="sllf-helpdesk__body">
+      <div class="sllf-helpdesk__container">
+        {% for block in section.blocks %}
+          {% case block.type %}
+            {% when 'title' %}
+              <h4 class="sllf-helpdesk__title">
+                {{ block.settings.title }}
+              </h4>
+            {% when 'qa' %}
+              <div class="sllf-helpdesk__qa">
+                <h5 class="sllf-helpdesk__question">
+                  {{ block.settings.title }}
+                  <div class="sllf-helpdesk__indicator"></div>
+                </h5>
+                <div class="sllf-helpdesk__answer">
+                  <div class="sllf-helpdesk__answer_inside">
+                    {{ block.settings.answer }}
+                  </div>
+                </div>
+              </div>
+          {% endcase %}
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+{% endif %}
+
+{% schema %}
+  {
+    "name": "Sellfino :: Helpdesk +",
+    "class": "sllf-helpdesk-section",
+    "settings": [
+      {
+        "type": "checkbox",
+        "id": "active",
+        "label": "Active",
+        "default": true
+      }
+    ],
+    "blocks": [
+      {
+        "type": "title",
+        "name": "Section Title",
+        "settings": [
+          {
+            "type": "text",
+            "id": "title",
+            "label": "Title"
+          }
+        ]
+      },
+      {
+        "type": "qa",
+        "name": "Question / Answer",
+        "settings": [
+          {
+            "type": "text",
+            "id": "title",
+            "label": "Question"
+          },
+          {
+            "type": "select",
+            "id": "type",
+            "label": "Answer Type",
+            "default": "text",
+            "options": [
+              {
+                "value": "text",
+                "label": "Text Field"
+              },
+              {
+                "value": "page",
+                "label": "Page Content"
+              }
+            ]
+          },
+          {
+            "type": "richtext",
+            "id": "answer",
+            "label": "Answer"
+          },
+          {
+            "type": "page",
+            "id": "page",
+            "label": "Page Content"
+          }
+        ]
+      }
+    ],
+    "presets": [
+      {
+        "name": "Sellfino :: Helpdesk +"
+      }
+    ]
+  }
+{% endschema %}
